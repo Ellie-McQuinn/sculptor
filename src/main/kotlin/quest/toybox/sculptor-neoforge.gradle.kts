@@ -10,12 +10,8 @@ plugins {
 
 val sculptor = extensions.getByType<SculptorExtension>()
 
-afterEvaluate {
-    neoForge {
-        neoFormVersion = sculptor.minecraftVersion.map { it.neoFormVersion }.get()
-
-        parchment {
-            parchmentArtifact = sculptor.parchmentArtifact.map { "org.parchmentmc.data:parchment-${it}@zip" }
-        }
+neoForge {
+    parchment {
+        parchmentArtifact = sculptor.parchmentArtifact.map { "org.parchmentmc.data:parchment-${it}@zip" }
     }
 }

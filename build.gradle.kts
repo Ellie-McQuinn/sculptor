@@ -7,16 +7,7 @@ plugins {
 }
 
 group = "quest.toybox.sculptor"
-version = "0.0.3"
-
-gradlePlugin {
-    plugins {
-        create("sculptor-main") {
-            id = "quest.toybox.sculptor-main"
-            implementationClass = "quest.toybox.sculptor.SculptorPlugin"
-        }
-    }
-}
+version = "0.0.5"
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(21)
@@ -35,7 +26,29 @@ kotlin {
 }
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "FabricMC's Maven"
+                url = uri("https://maven.fabricmc.net/")
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("net.fabricmc")
+        }
+    }
+}
+
+dependencies {
+    // https://projects.neoforged.net/neoforged/moddevgradle/
+    implementation(group = "net.neoforged", name = "moddev-gradle", version = "2.0.95")
+    // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
+    implementation(group = "net.fabricmc", name = "fabric-loom", version = "1.11.1")
+
+    implementation(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.1.0")
 }
 
 // Find checksums here: https://gradle.org/release-checksums/
