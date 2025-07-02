@@ -785,4 +785,8 @@ enum class MCVersions(
     fun getModrinthName(): String {
         return version
     }
+
+    override fun toString(): String {
+        return version
+    }
 }
