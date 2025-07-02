@@ -786,7 +786,17 @@ enum class MCVersions(
         return version
     }
 
+    fun getJavaVersion(): Int {
+        return if (this >= MC_24W14A) {
+            21
+        } else {
+            17
+        }
+    }
+
     override fun toString(): String {
         return version
     }
+
+
 }
