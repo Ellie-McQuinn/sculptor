@@ -1,21 +1,37 @@
 package quest.toybox.sculptor.extension
 
-import org.gradle.api.provider.Property
-import quest.toybox.sculptor.minecraft.MCVersions
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.gradle.api.Project
+import org.gradle.api.provider.Provider
+import org.gradle.api.provider.ProviderFactory
+import java.util.function.Consumer
+import javax.inject.Inject
 
-abstract class SculptorExtension {
-    abstract val minecraftVersion: Property<MCVersions>
-    abstract val parchmentArtifact: Property<String>
+abstract class SculptorExtension @Inject constructor(val project: Project, val factory: ProviderFactory) {
+    val features = mutableMapOf<FeatureKey<*>, Any>()
+    val callbacks: MutableMap<FeatureKey<*>, Consumer<Any>> = mutableMapOf()
 
-    abstract val javaVersion: Property<Int>
-    abstract val kotlinVersion: Property<KotlinVersion>
+    fun <T: Any> flag(key: FeatureKey<T>, value: T) {
+        if (key !in features) {
+            features.put(key, value)
+            callbacks.remove(key)?.accept(value)
+        }
+    }
 
-    init {
-        minecraftVersion.finalizeValueOnRead()
-        parchmentArtifact.finalizeValueOnRead()
+    fun <T> get(key: FeatureKey<T>): Provider<T> {
+        return factory.provider { features[key] as T }
+    }
 
-        javaVersion.convention(minecraftVersion.map { it.getJavaVersion() }).finalizeValueOnRead()
-        kotlinVersion.convention(KotlinVersion.KOTLIN_2_1)
+    fun getJavaVersion(): Provider<Int> {
+        return get(FeatureKey.JAVA).orElse(get(FeatureKey.MINECRAFT).map { it.getJavaVersion() })
+    }
+
+    fun <T> whenAdded(type: FeatureKey<T>, callback: Consumer<T>) {
+        val flag = get(type)
+
+        if (flag.isPresent) {
+            callback.accept(flag.get())
+        } else {
+            callbacks.put(type, callback as Consumer<Any>)
+        }
     }
 }

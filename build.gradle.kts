@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "quest.toybox.sculptor"
-version = "0.0.6"
+version = "0.0.8"
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(21)

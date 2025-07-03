@@ -1,30 +1,32 @@
 package quest.toybox
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
+import quest.toybox.sculptor.extension.FeatureKey
 import quest.toybox.sculptor.extension.SculptorExtension
+import kotlin.apply
 
 plugins {
     java
-    kotlin("jvm")
 }
 
 val sculptor = extensions.create<SculptorExtension>("sculptor")
 
 java.toolchain {
-    languageVersion = provider { JavaLanguageVersion.of(sculptor.javaVersion.get()) }
+    languageVersion = sculptor.getJavaVersion().map { JavaLanguageVersion.of(it) }
     vendor = JvmVendorSpec.MICROSOFT
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = provider { JvmTarget.fromTarget(java.toolchain.languageVersion.get().toString()) }
-        languageVersion = sculptor.kotlinVersion
-    }
 }
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.release = sculptor.javaVersion.get()
+        options.release = sculptor.getJavaVersion()
         options.encoding = "UTF-8"
+    }
+}
+
+sculptor.whenAdded(FeatureKey.KOTLIN) { version ->
+    extensions.getByType<KotlinJvmExtension>().apply {
+        compilerOptions {
+            languageVersion.set(version)
+        }
     }
 }
