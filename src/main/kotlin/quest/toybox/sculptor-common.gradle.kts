@@ -1,7 +1,7 @@
 package quest.toybox
 
 import org.gradle.kotlin.dsl.getByType
-import quest.toybox.sculptor.extension.FeatureKey
+import quest.toybox.sculptor.extension.Key
 import quest.toybox.sculptor.extension.SculptorExtension
 
 plugins {
@@ -13,15 +13,15 @@ val sculptor = extensions.getByType<SculptorExtension>()
 
 afterEvaluate {
     neoForge {
-        neoFormVersion = sculptor.get(FeatureKey.MINECRAFT).map { it.neoFormVersion }.get()
+        neoFormVersion = sculptor.get(Key.MINECRAFT).map { it.neoFormVersion }.get()
 
         parchment {
-            parchmentArtifact = sculptor.get(FeatureKey.PARCHMENT).map { "org.parchmentmc.data:parchment-${it}@zip" }
+            parchmentArtifact = sculptor.get(Key.PARCHMENT).map { "org.parchmentmc.data:parchment-${it}@zip" }
         }
     }
 }
 
-sculptor.whenAdded(FeatureKey.DATA_GENERATION) {
+sculptor.whenAdded(Key.DATA_GENERATION) {
     sourceSets.main {
         resources.srcDirs("src/generated/resources")
     }

@@ -1,7 +1,7 @@
 package quest.toybox
 
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
-import quest.toybox.sculptor.extension.FeatureKey
+import quest.toybox.sculptor.extension.Key
 import quest.toybox.sculptor.extension.SculptorExtension
 import kotlin.apply
 
@@ -23,7 +23,7 @@ tasks {
     }
 }
 
-sculptor.whenAdded(FeatureKey.KOTLIN) { version ->
+sculptor.whenAdded(Key.KOTLIN) { version ->
     extensions.getByType<KotlinJvmExtension>().apply {
         compilerOptions {
             languageVersion.set(version)

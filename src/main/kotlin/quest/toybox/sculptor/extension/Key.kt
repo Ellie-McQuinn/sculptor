@@ -3,7 +3,7 @@ package quest.toybox.sculptor.extension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import quest.toybox.sculptor.minecraft.MCVersions
 
-interface FeatureKey<T>{
+interface Key<T>{
     companion object {
         val MINECRAFT = new<MCVersions>()
         val PARCHMENT = new<String>()
@@ -13,6 +13,6 @@ interface FeatureKey<T>{
 
         val DATA_GENERATION = new<Unit>()
 
-        fun <T> new(): FeatureKey<T> = object : FeatureKey<T> {}
+        fun <T> new(): Key<T> = object : Key<T> {}
     }
 }
