@@ -11,7 +11,7 @@ interface FeatureKey<T>{
         val JAVA = new<Int>()
         val KOTLIN = new<KotlinVersion>()
 
-        val DATA_GENERATION = new<Nothing>()
+        val DATA_GENERATION = new<Unit>()
 
         fun <T> new(): FeatureKey<T> = object : FeatureKey<T> {}
     }
