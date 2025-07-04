@@ -798,5 +798,9 @@ enum class MCVersions(
         return version
     }
 
-
+    companion object {
+        fun fromVersion(version: String): MCVersions? {
+            return MCVersions.values().firstOrNull { it.version == version }
+        }
+    }
 }

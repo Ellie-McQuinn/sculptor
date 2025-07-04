@@ -1,7 +1,6 @@
 package quest.toybox
 
-import org.gradle.kotlin.dsl.getByType
-import quest.toybox.sculptor.extension.Key
+import org.gradle.kotlin.dsl.getByName
 import quest.toybox.sculptor.extension.SculptorExtension
 
 plugins {
@@ -9,20 +8,20 @@ plugins {
     id("fabric-loom")
 }
 
-val sculptor = extensions.getByType<SculptorExtension>()
+val sculptor = extensions.getByName<SculptorExtension>("sculptor")
 
 dependencies {
-    minecraft(sculptor.get(Key.MINECRAFT).map { "com.mojang:minecraft:${it}" })
+    minecraft("com.mojang:minecraft:${sculptor.minecraftVersion}")
 
     mappings(
         provider {
             @Suppress("UnstableApiUsage")
             loom.layered {
                 officialMojangMappings()
-                parchment(sculptor.get(Key.PARCHMENT).map { "org.parchmentmc.data:parchment-${it}@zip" })
+                parchment(sculptor.parchmentArtifact)
             }
         }
     )
 
-    modImplementation(sculptor.get(Key.MINECRAFT).map { "net.fabricmc:fabric-loader:${it.minimumFabricLoaderVersion}" })
+    modImplementation("net.fabricmc:fabric-loader:${sculptor.minecraftVersion.minimumFabricLoaderVersion}")
 }

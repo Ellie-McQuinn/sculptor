@@ -1,7 +1,5 @@
 package quest.toybox
 
-import org.gradle.kotlin.dsl.getByType
-import quest.toybox.sculptor.extension.Key
 import quest.toybox.sculptor.extension.SculptorExtension
 
 plugins {
@@ -9,10 +7,10 @@ plugins {
     id("net.neoforged.moddev")
 }
 
-val sculptor = extensions.getByType<SculptorExtension>()
+val sculptor = extensions.getByName<SculptorExtension>("sculptor")
 
 neoForge {
     parchment {
-        parchmentArtifact = sculptor.get(Key.PARCHMENT).map { "org.parchmentmc.data:parchment-${it}@zip" }
+        parchmentArtifact = sculptor.parchmentArtifact
     }
 }
