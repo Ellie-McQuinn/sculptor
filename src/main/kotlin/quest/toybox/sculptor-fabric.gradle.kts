@@ -61,6 +61,3 @@ sculptor.mods {
         }
     }
 }
-
-println(sculptor.fabricApiVersion)
-println(sculptor.fabricKotlinVersion)
