@@ -18,6 +18,7 @@ import quest.toybox.sculptor.extension.dependency.ModDependency
 import quest.toybox.sculptor.extension.dependency.RepositoryExclusions
 import quest.toybox.sculptor.extension.dependency.UploadTarget
 import java.net.URI
+import java.util.Optional
 import javax.inject.Inject
 import kotlin.collections.iterator
 import kotlin.jvm.optionals.getOrNull
@@ -25,20 +26,36 @@ import kotlin.jvm.optionals.getOrNull
 abstract class SculptorExtension @Inject constructor(val project: Project, objects: ObjectFactory) {
     val constants = project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").find("constants").get()
 
-    val minecraftVersion by lazy {
+    val minecraftVersion: MCVersions by lazy {
         constants.findVersion("minecraft").map { MCVersions.fromVersion(it.requiredVersion) }.get()
     }
 
-    val javaVersion by lazy {
+    val javaVersion: Int by lazy {
         constants.findVersion("java").map { it.requiredVersion.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
     }
 
-    val kotlinVersion by lazy {
+    val kotlinVersion: KotlinVersion by lazy {
         constants.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }.get()
     }
 
-    val parchmentArtifact by lazy {
+    val parchmentArtifact: String by lazy {
         parchmentArtifact(project.property("parchment_version").toString())
+    }
+
+    val neoforgeVersion: String by lazy {
+        constants.findVersion("neoforge").get().requiredVersion
+    }
+
+    val fabricLoaderVersion: String by lazy {
+        constants.findVersion("fabric_loader").map { it.requiredVersion }.getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
+    }
+
+    val fabricApiVersion: Optional<String> by lazy {
+        constants.findVersion("fabric_api").map { it.requiredVersion }
+    }
+
+    val fabricKotlinVersion: Optional<String> by lazy {
+        constants.findVersion("fabric_kotlin").map { it.requiredVersion }
     }
 
     private var areModsFinalized: Boolean = false

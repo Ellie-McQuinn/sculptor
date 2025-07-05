@@ -107,29 +107,32 @@ dependencies {
 // region // Add Information to Jar...
 val extraReplacements = ext.find<Map<String, String>>("extra_replacements")
 
-tasks.jar.configure {
-    exclude("**/datagen/**")
-    exclude(".cache/**")
+tasks {
+    jar.configure {
+        exclude("**/datagen/**")
+        exclude(".cache/**")
 
-    rootDir.resolve("LICENSE").also { if (it.exists()) from(it) }
+        rootDir.resolve("LICENSE").also { if (it.exists()) from(it) }
 
-    archiveVersion = getModVersion(version.toString())
-}
+        archiveVersion = getModVersion(project.version.toString())
+    }
 
-tasks.processResources {
-    val replacements = mutableMapOf(
-        "version" to version,
-        "group" to group,
-        "java_version" to sculptor.javaVersion.toString(),
-        "minecraft_version" to sculptor.minecraftVersion,
-    )
+    processResources.configure {
+        val replacements = mutableMapOf(
+            "version" to project.version,
+            "group" to project.group,
+            "java_version" to sculptor.javaVersion.toString(),
+            "minecraft_version" to sculptor.minecraftVersion,
+            "fabric_loader_version" to sculptor.minecraftVersion.minimumFabricLoaderVersion
+        )
 
-    extraReplacements?.also { replacements.putAll(it) }
+        extraReplacements?.also { replacements.putAll(it) }
 
-    inputs.properties(replacements)
+        inputs.properties(replacements)
 
-    filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "*.mixins.json", "*.mcmeta")) {
-        expand(replacements)
+        filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "*.mixins.json", "*.mcmeta")) {
+            expand(replacements)
+        }
     }
 }
 // endregion

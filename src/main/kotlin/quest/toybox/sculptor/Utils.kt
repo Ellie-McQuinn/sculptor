@@ -1,6 +1,7 @@
 package quest.toybox.sculptor
 
 import org.gradle.api.plugins.ExtraPropertiesExtension
+import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 
 
 fun <T: Any> ExtraPropertiesExtension.gets(key: String): T = get(key) as T
@@ -14,4 +15,10 @@ fun getModVersion(version: String): String {
     } else {
         version
     }
+}
+
+fun displayName(name: String): String = if (name == "neoforge") {
+    "NeoForge"
+} else {
+    name.uppercaseFirstChar()
 }
