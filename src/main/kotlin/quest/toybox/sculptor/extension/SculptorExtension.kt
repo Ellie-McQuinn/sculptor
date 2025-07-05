@@ -24,6 +24,14 @@ import kotlin.collections.iterator
 import kotlin.jvm.optionals.getOrNull
 
 abstract class SculptorExtension @Inject constructor(val project: Project, objects: ObjectFactory) {
+    init {
+        project.afterEvaluate {
+            if (!areModsFinalized && mods.count() > 0) {
+                throw IllegalStateException("Please call finalizeMods() in the SculptorExtension")
+            }
+        }
+    }
+
     val constants = project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").find("constants").get()
 
     val minecraftVersion: MCVersions by lazy {
