@@ -13,6 +13,16 @@ plugins {
 
 val sculptor = extensions.getByName<SculptorExtension>("sculptor")
 
+if (sculptor.hasDatagens) {
+    fabricApi {
+        configureDataGeneration {
+            modId = sculptor.modId
+            outputDirectory = file("src/generated/resources")
+            client = true
+        }
+    }
+}
+
 loom {
     runs {
         configureEach {
@@ -22,16 +32,8 @@ loom {
         named("client") { client() }
 
         named("server") { server() }
-    }
-}
 
-if (sculptor.hasDatagens) {
-    fabricApi {
-        configureDataGeneration {
-            modId = sculptor.modId
-            outputDirectory = file("src/generated/resources")
-            client = true
-        }
+        named("datagen") { configName = "${displayName(project.name)} Data" }
     }
 }
 
