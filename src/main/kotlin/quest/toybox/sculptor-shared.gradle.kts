@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import quest.toybox.sculptor.extension.SculptorExtension
 import quest.toybox.sculptor.find
 import quest.toybox.sculptor.getModVersion
-import kotlin.jvm.optionals.getOrNull
 
 plugins {
     `java-library`
