@@ -24,6 +24,11 @@ if (sculptor.hasDatagens) {
 }
 
 loom {
+    @Suppress("UnstableApiUsage")
+    mixin {
+        useLegacyMixinAp = false
+    }
+
     runs {
         configureEach {
             configName = "${displayName(project.name)} ${name.uppercaseFirstChar()}"
