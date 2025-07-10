@@ -21,6 +21,7 @@ neoForge {
     runs {
         configureEach {
             ideName.convention("${displayName(project.name)} ${name.uppercaseFirstChar()} (${project.path})")
+            systemProperty("neoforge.enabledGameTestNamespaces", sculptor.modId)
         }
 
         create("client") { client() }
@@ -43,4 +44,20 @@ neoForge {
             }
         }
     }
+
+    mods {
+        create(sculptor.modId) {
+            sourceSet(sourceSets.main.get())
+        }
+    }
+}
+
+if (sculptor.hasDatagens) {
+    sourceSets.main {
+        resources.srcDirs("src/generated/resources")
+    }
+}
+
+tasks.processResources {
+    exclude("*.accesswidener")
 }
