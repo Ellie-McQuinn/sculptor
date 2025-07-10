@@ -17,6 +17,15 @@ neoForge {
     }
 }
 
+dependencies {
+    compileOnly(sculptor.constants.findLibrary("fabric_mixin").orElseThrow())
+    annotationProcessor(compileOnly(sculptor.constants.findLibrary("mixinextras_common").orElseThrow())!!)
+
+    sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
+        compileOnly(it)
+    }
+}
+
 if (sculptor.hasDatagens) {
     sourceSets.main {
         resources.srcDirs("src/generated/resources")

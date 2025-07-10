@@ -1,6 +1,5 @@
 package quest.toybox
 
-import gradle.kotlin.dsl.accessors._462699a4100b921127428b1d5ea9197a.fabricApi
 import org.gradle.kotlin.dsl.getByName
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
 import quest.toybox.sculptor.displayName
@@ -39,7 +38,9 @@ loom {
 
         named("server") { server() }
 
-        named("datagen") { configName = "${displayName(project.name)} Data" }
+        if (sculptor.hasDatagens) {
+            named("datagen") { configName = "${displayName(project.name)} Data" }
+        }
     }
 }
 

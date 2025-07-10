@@ -11,6 +11,19 @@ plugins {
 
 val sculptor = extensions.getByName<SculptorExtension>("sculptor")
 
+sculptor.mods {
+    sculptor.constants.findLibrary("neoforge_kotlin").ifPresent { library ->
+        create("kotlin-for-forge") {
+            required()
+
+            artifacts {
+                implementation(library)
+            }
+        }
+    }
+
+}
+
 neoForge {
     version = sculptor.neoforgeVersion
 

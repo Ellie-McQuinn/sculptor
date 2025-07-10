@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import quest.toybox.sculptor.extension.SculptorExtension
 import quest.toybox.sculptor.find
 import quest.toybox.sculptor.getModVersion
+import kotlin.jvm.optionals.getOrNull
 
 plugins {
     `java-library`
@@ -121,10 +122,18 @@ tasks {
         val replacements = mutableMapOf(
             "version" to project.version,
             "group" to project.group,
+            "mod_id" to sculptor.modId,
+            "neoforge_version" to sculptor.neoforgeVersion,
             "java_version" to sculptor.javaVersion.toString(),
             "minecraft_version" to sculptor.minecraftVersion,
-            "fabric_loader_version" to sculptor.minecraftVersion.minimumFabricLoaderVersion
+            "fabric_loader_version" to sculptor.fabricLoaderVersion,
+            "fabric_api_version" to sculptor.fabricApiVersion,
+            "fabric_kotlin_version" to sculptor.fabricKotlinVersion.getOrNull(),
         )
+
+        sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
+            replacements.put("neoforge_kotlin_version", it.get().version)
+        }
 
         extraReplacements?.also { replacements.putAll(it) }
 

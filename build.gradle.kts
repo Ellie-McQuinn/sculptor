@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "quest.toybox.sculptor"
-version = "0.0.16"
+version = "0.0.18"
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(21)
@@ -47,6 +47,9 @@ dependencies {
     implementation(group = "net.neoforged", name = "moddev-gradle", version = "2.0.95")
     // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
     implementation(group = "net.fabricmc", name = "fabric-loom", version = "1.11.1")
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation(group = "com.google.code.gson", name = "gson", version = "2.13.1")
 
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.1.0")
 }
