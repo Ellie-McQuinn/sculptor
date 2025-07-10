@@ -18,7 +18,6 @@ import quest.toybox.sculptor.extension.dependency.ModDependency
 import quest.toybox.sculptor.extension.dependency.RepositoryExclusions
 import quest.toybox.sculptor.extension.dependency.UploadTarget
 import java.net.URI
-import java.util.Optional
 import javax.inject.Inject
 import kotlin.collections.iterator
 import kotlin.jvm.optionals.getOrNull
@@ -56,14 +55,6 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
 
     val fabricLoaderVersion: String by lazy {
         constants.findVersion("fabric_loader").map { it.requiredVersion }.getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
-    }
-
-    val fabricApiVersion: Optional<String> by lazy {
-        constants.findVersion("fabric_api").map { it.requiredVersion }
-    }
-
-    val fabricKotlinVersion: Optional<String> by lazy {
-        constants.findVersion("fabric_kotlin").map { it.requiredVersion }
     }
 
     val hasDatagens: Boolean by lazy {

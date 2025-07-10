@@ -126,13 +126,19 @@ tasks {
             "neoforge_version" to sculptor.neoforgeVersion,
             "java_version" to sculptor.javaVersion.toString(),
             "minecraft_version" to sculptor.minecraftVersion,
-            "fabric_loader_version" to sculptor.fabricLoaderVersion,
-            "fabric_api_version" to sculptor.fabricApiVersion,
-            "fabric_kotlin_version" to sculptor.fabricKotlinVersion.getOrNull(),
+            "fabric_loader_version" to sculptor.fabricLoaderVersion
         )
 
+        sculptor.constants.findLibrary("fabric_api").ifPresent {
+            replacements.put("fabric_api_version", it.get().versionConstraint.requiredVersion)
+        }
+
+        sculptor.constants.findLibrary("fabric_kotlin").ifPresent {
+            replacements.put("fabric_kotlin_version", it.get().versionConstraint.requiredVersion)
+        }
+
         sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
-            replacements.put("neoforge_kotlin_version", it.get().version)
+            replacements.put("neoforge_kotlin_version", it.get().versionConstraint.requiredVersion)
         }
 
         extraReplacements?.also { replacements.putAll(it) }

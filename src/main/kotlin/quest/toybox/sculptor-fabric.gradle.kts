@@ -61,22 +61,22 @@ dependencies {
 }
 
 sculptor.mods {
-    sculptor.fabricApiVersion.ifPresent { version ->
+    sculptor.constants.findLibrary("fabric_api").ifPresent { library ->
         create("fabric-api") {
             required()
 
             artifacts {
-                modImplementation(group = "net.fabricmc.fabric-api", name = "fabric-api", version = version)
+                modImplementation(library)
             }
         }
     }
 
-    sculptor.fabricKotlinVersion.ifPresent { version ->
+    sculptor.constants.findLibrary("fabric_kotlin").ifPresent { library ->
         create("fabric-language-kotlin") {
             required()
 
             artifacts {
-                modImplementation(group = "net.fabricmc", name = "fabric-language-kotlin", version = version)
+                modImplementation(library)
             }
         }
     }

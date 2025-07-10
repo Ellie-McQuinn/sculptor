@@ -19,7 +19,11 @@ neoForge {
 
 dependencies {
     compileOnly(sculptor.constants.findLibrary("fabric_mixin").orElseThrow())
-    annotationProcessor(compileOnly(sculptor.constants.findLibrary("mixinextras_common").orElseThrow())!!)
+
+    sculptor.constants.findLibrary("mixinextras_common").orElseThrow().also {
+        compileOnly(it)
+        annotationProcessor(it)
+    }
 
     sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
         compileOnly(it)
