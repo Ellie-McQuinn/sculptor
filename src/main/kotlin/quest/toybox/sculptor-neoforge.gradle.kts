@@ -20,11 +20,27 @@ neoForge {
 
     runs {
         configureEach {
-            ideName = "${displayName(project.name)} ${name.uppercaseFirstChar()} (${project.path})"
+            ideName.convention("${displayName(project.name)} ${name.uppercaseFirstChar()} (${project.path})")
         }
 
         create("client") { client() }
 
         create("server") { server() }
+
+        if (sculptor.hasDatagens) {
+            create("data") {
+                if (sculptor.minecraftVersion.hasSplitDatagens()) {
+                    clientData()
+                } else {
+                    data()
+                }
+
+                programArguments.addAll(
+                    "--mod", sculptor.modId,
+                    "--output", file("src/generated/resources").absolutePath,
+                    "--all"
+                )
+            }
+        }
     }
 }

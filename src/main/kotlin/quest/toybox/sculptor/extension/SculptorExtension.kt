@@ -66,6 +66,14 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
         constants.findVersion("fabric_kotlin").map { it.requiredVersion }
     }
 
+    val hasDatagens: Boolean by lazy {
+        project.findProperty("sculptor.datagens") == "true"
+    }
+
+    val modId: String by lazy {
+        project.findProperty("mod_id") as? String ?: throw IllegalStateException("Please set the 'mod_id' property.")
+    }
+
     private var areModsFinalized: Boolean = false
     private val mods: NamedDomainObjectContainer<ModDependency> = objects.domainObjectContainer(ModDependency::class.java)
 

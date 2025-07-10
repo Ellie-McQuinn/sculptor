@@ -17,8 +17,8 @@ neoForge {
     }
 }
 
-//sculptor.whenAdded(Key.DATA_GENERATION) {
-//    sourceSets.main {
-//        resources.srcDirs("src/generated/resources")
-//    }
-//}
+if (sculptor.hasDatagens) {
+    sourceSets.main {
+        resources.srcDirs("src/generated/resources")
+    }
+}
