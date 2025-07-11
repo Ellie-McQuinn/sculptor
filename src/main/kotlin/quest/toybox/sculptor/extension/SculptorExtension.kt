@@ -2,6 +2,7 @@ package quest.toybox.sculptor.extension
 
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.model.ObjectFactory
@@ -32,18 +33,22 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
         }
     }
 
-    val constants = project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").find("constants").get()
+    private val libs: VersionCatalog by lazy {
+        project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").find("libs").get()
+    }
+
+    fun libs(): VersionCatalog = libs
 
     val minecraftVersion: MCVersions by lazy {
-        constants.findVersion("minecraft").map { MCVersions.fromVersion(it.requiredVersion) }.get()
+        libs.findVersion("minecraft").map { MCVersions.fromVersion(it.requiredVersion) }.get()
     }
 
     val javaVersion: Int by lazy {
-        constants.findVersion("java").map { it.requiredVersion.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
+        libs.findVersion("java").map { it.requiredVersion.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
     }
 
     val kotlinVersion: Optional<KotlinVersion> by lazy {
-        constants.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }
+        libs.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }
     }
 
     val parchmentArtifact: String by lazy {
@@ -51,11 +56,11 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
     }
 
     val neoforgeVersion: String by lazy {
-        constants.findVersion("neoforge").get().requiredVersion
+        libs.findVersion("neoforge").get().requiredVersion
     }
 
     val fabricLoaderVersion: String by lazy {
-        constants.findVersion("fabric_loader").map { it.requiredVersion }.getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
+        libs.findVersion("fabric_loader").map { it.requiredVersion }.getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
     }
 
     val hasDatagens: Boolean by lazy {
@@ -63,11 +68,11 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
     }
 
     val modId: String by lazy {
-        project.findProperty("mod_id") as? String ?: throw IllegalStateException("Please set the 'mod_id' property.")
+        project.findProperty("mod_id") as? String ?: "unknown_project"
     }
 
     val modName: String by lazy {
-        project.findProperty("mod_name") as? String ?: throw IllegalStateException("Please set the 'mod_name' property")
+        project.findProperty("mod_name") as? String ?: "Unknown Project"
     }
 
     private var areModsFinalized: Boolean = false

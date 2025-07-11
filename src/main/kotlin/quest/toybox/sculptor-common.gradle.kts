@@ -18,14 +18,16 @@ neoForge {
 }
 
 dependencies {
-    compileOnly(sculptor.constants.findLibrary("fabric_mixin").orElseThrow())
+    val sculptorLibs = sculptor.libs()
 
-    sculptor.constants.findLibrary("mixinextras_common").orElseThrow().also {
+    compileOnly(sculptorLibs.findLibrary("fabric_mixin").orElseThrow())
+
+    sculptorLibs.findLibrary("mixinextras_common").orElseThrow().also {
         compileOnly(it)
         annotationProcessor(it)
     }
 
-    sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
+    sculptorLibs.findLibrary("neoforge_kotlin").ifPresent {
         compileOnly(it)
     }
 }
