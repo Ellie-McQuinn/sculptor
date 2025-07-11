@@ -34,6 +34,7 @@ neoForge {
     runs {
         configureEach {
             ideName.convention("${displayName(project.name)} ${name.uppercaseFirstChar()} (${project.path})")
+            disableIdeRun()
             systemProperty("neoforge.enabledGameTestNamespaces", sculptor.modId)
         }
 

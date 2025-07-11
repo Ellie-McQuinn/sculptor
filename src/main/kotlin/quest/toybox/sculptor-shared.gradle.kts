@@ -12,7 +12,7 @@ plugins {
 
 val sculptor = extensions.create<SculptorExtension>("sculptor")
 
-base.archivesName = "${version}-${project.name}-${sculptor.minecraftVersion}"
+base.archivesName.convention("${sculptor.modId}-${project.name}-${sculptor.minecraftVersion}")
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(sculptor.javaVersion)
@@ -26,10 +26,10 @@ tasks {
     }
 }
 
-if (plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
+sculptor.kotlinVersion.ifPresent { version ->
     extensions.configure<KotlinJvmExtension> {
         compilerOptions {
-            languageVersion = sculptor.kotlinVersion
+            languageVersion = version
         }
     }
 }
@@ -122,6 +122,7 @@ tasks {
             "version" to project.version,
             "group" to project.group,
             "mod_id" to sculptor.modId,
+            "mod_name" to sculptor.modName,
             "neoforge_version" to sculptor.neoforgeVersion,
             "java_version" to sculptor.javaVersion.toString(),
             "minecraft_version" to sculptor.minecraftVersion,
@@ -129,15 +130,15 @@ tasks {
         )
 
         sculptor.constants.findLibrary("fabric_api").ifPresent {
-            replacements.put("fabric_api_version", it.get().versionConstraint.requiredVersion)
+            replacements["fabric_api_version"] = it.get().versionConstraint.requiredVersion
         }
 
         sculptor.constants.findLibrary("fabric_kotlin").ifPresent {
-            replacements.put("fabric_kotlin_version", it.get().versionConstraint.requiredVersion)
+            replacements["fabric_kotlin_version"] = it.get().versionConstraint.requiredVersion
         }
 
         sculptor.constants.findLibrary("neoforge_kotlin").ifPresent {
-            replacements.put("neoforge_kotlin_version", it.get().versionConstraint.requiredVersion)
+            replacements["neoforge_kotlin_version"] = it.get().versionConstraint.requiredVersion
         }
 
         extraReplacements?.also { replacements.putAll(it) }

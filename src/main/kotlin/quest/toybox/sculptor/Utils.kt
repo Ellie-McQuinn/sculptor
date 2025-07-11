@@ -38,7 +38,7 @@ fun NamedDomainObjectContainer<RunModel>.commonDataRun(common: Project, self: Pr
     }
 
     create("commonData") {
-        ideName.set("${displayName((common.name))} Data (${self.path})")
+        ideName.convention("${displayName((common.name))} Data (${self.path})")
 
         if (sculptor.minecraftVersion.hasSplitDatagens()) {
             clientData()

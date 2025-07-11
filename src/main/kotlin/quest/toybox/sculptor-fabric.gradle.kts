@@ -32,7 +32,7 @@ loom {
     runs {
         configureEach {
             configName = "${displayName(project.name)} ${name.uppercaseFirstChar()}"
-            isIdeConfigGenerated = true
+            isIdeConfigGenerated = false
         }
         named("client") { client() }
 

@@ -18,6 +18,7 @@ import quest.toybox.sculptor.extension.dependency.ModDependency
 import quest.toybox.sculptor.extension.dependency.RepositoryExclusions
 import quest.toybox.sculptor.extension.dependency.UploadTarget
 import java.net.URI
+import java.util.Optional
 import javax.inject.Inject
 import kotlin.collections.iterator
 import kotlin.jvm.optionals.getOrNull
@@ -41,8 +42,8 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
         constants.findVersion("java").map { it.requiredVersion.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
     }
 
-    val kotlinVersion: KotlinVersion by lazy {
-        constants.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }.get()
+    val kotlinVersion: Optional<KotlinVersion> by lazy {
+        constants.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }
     }
 
     val parchmentArtifact: String by lazy {
@@ -65,12 +66,18 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
         project.findProperty("mod_id") as? String ?: throw IllegalStateException("Please set the 'mod_id' property.")
     }
 
+    val modName: String by lazy {
+        project.findProperty("mod_name") as? String ?: throw IllegalStateException("Please set the 'mod_name' property")
+    }
+
     private var areModsFinalized: Boolean = false
     private val mods: NamedDomainObjectContainer<ModDependency> = objects.domainObjectContainer(ModDependency::class.java)
 
     fun mods(configuration: NamedDomainObjectContainer<ModDependency>.() -> Unit) {
         if (!areModsFinalized) {
             configuration.invoke(mods)
+        } else {
+            throw IllegalStateException("Tried configuring mods when mods have already been frozen.")
         }
     }
 
