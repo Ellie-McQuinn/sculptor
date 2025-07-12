@@ -1,11 +1,12 @@
 package quest.toybox.sculptor
 
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import net.neoforged.moddevgradle.dsl.NeoForgeExtension
 import net.neoforged.moddevgradle.dsl.RunModel
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtraPropertiesExtension
-import org.gradle.api.project.IsolatedProject
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.dependencies
@@ -16,12 +17,13 @@ import org.gradle.kotlin.dsl.invoke
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.project
 import org.gradle.kotlin.dsl.support.uppercaseFirstChar
+import org.gradle.kotlin.dsl.the
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import quest.toybox.sculptor.extension.SculptorExtension
 
 
-fun <T: Any> ExtraPropertiesExtension.gets(key: String): T = get(key) as T
+fun <T: Any> ExtraPropertiesExtension.gets(key: String): T = get(key)!! as T
 fun <T: Any> ExtraPropertiesExtension.find(key: String): T? = if (has(key)) { gets(key) } else { null }
 
 fun parchmentArtifact(version: String) = "org.parchmentmc.data:parchment-${version}@zip"
@@ -90,8 +92,7 @@ fun Project.sculptorParent(configuration: String) {
     }
 }
 
-@Suppress("UnstableApiUsage")
-fun Project.sculptorChild(configuration: String, parent: IsolatedProject) {
+fun Project.sculptorChild(configuration: String, parent: Project) {
     evaluationDependsOn(parent.path)
 
     configurations {
@@ -123,5 +124,17 @@ fun Project.sculptorChild(configuration: String, parent: IsolatedProject) {
             dependsOn(configurations["${configuration}Resources"])
             from(configurations["${configuration}Resources"])
         }
+    }
+
+    if (project.plugins.hasPlugin("net.neoforged.moddev") && parent.plugins.hasPlugin("net.neoforged.moddev")) {
+        the<NeoForgeExtension>().accessTransformers.from(
+            parent.the<NeoForgeExtension>().accessTransformers.files
+        )
+    }
+
+    if (project.plugins.hasPlugin("fabric-loom") && parent.plugins.hasPlugin("fabric-loom")) {
+        val parentProp = parent.the<LoomGradleExtensionAPI>().accessWidenerPath
+
+        the<LoomGradleExtensionAPI>().accessWidenerPath.convention(parentProp)
     }
 }

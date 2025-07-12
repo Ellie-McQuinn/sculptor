@@ -115,6 +115,10 @@ tasks {
         rootDir.resolve("LICENSE").also { if (it.exists()) from(it) }
 
         archiveVersion = getModVersion(project.version.toString())
+
+        manifest.attributes(
+            "Built-On-Minecraft" to sculptor.minecraftVersion.version
+        )
     }
 
     processResources.configure {
