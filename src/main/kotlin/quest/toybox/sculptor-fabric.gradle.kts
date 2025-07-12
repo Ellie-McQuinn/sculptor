@@ -61,9 +61,7 @@ dependencies {
 }
 
 sculptor.mods {
-    val sculptorLibs = sculptor.libs()
-
-    sculptorLibs.findLibrary("fabric_api").ifPresent { library ->
+    sculptor.optionalLibrary("fabric_api").ifPresent { library ->
         create("fabric-api") {
             required()
 
@@ -73,7 +71,7 @@ sculptor.mods {
         }
     }
 
-    sculptorLibs.findLibrary("fabric_kotlin").ifPresent { library ->
+    sculptor.optionalLibrary("fabric_kotlin").ifPresent { library ->
         create("fabric-language-kotlin") {
             required()
 

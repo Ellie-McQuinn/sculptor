@@ -100,10 +100,8 @@ repositories {
 }
 // endregion
 
-val sculptorLibs = sculptor.libs()
-
 dependencies {
-    implementation(sculptorLibs.findLibrary("jetbrains-annotations").get())
+    implementation(sculptor.library("jetbrains-annotations"))
 }
 
 // region // Add Information to Jar...
@@ -131,15 +129,15 @@ tasks {
             "fabric_loader_version" to sculptor.fabricLoaderVersion
         )
 
-        sculptorLibs.findLibrary("fabric_api").ifPresent {
+        sculptor.optionalLibrary("fabric_api").ifPresent {
             replacements["fabric_api_version"] = it.get().versionConstraint.requiredVersion
         }
 
-        sculptorLibs.findLibrary("fabric_kotlin").ifPresent {
+        sculptor.optionalLibrary("fabric_kotlin").ifPresent {
             replacements["fabric_kotlin_version"] = it.get().versionConstraint.requiredVersion
         }
 
-        sculptorLibs.findLibrary("neoforge_kotlin").ifPresent {
+        sculptor.optionalLibrary("neoforge_kotlin").ifPresent {
             replacements["neoforge_kotlin_version"] = it.get().versionConstraint.requiredVersion
         }
 

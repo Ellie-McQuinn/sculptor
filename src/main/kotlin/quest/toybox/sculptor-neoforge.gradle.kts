@@ -12,9 +12,7 @@ plugins {
 val sculptor = extensions.getByName<SculptorExtension>("sculptor")
 
 sculptor.mods {
-    val sculptorLibs = sculptor.libs()
-
-    sculptorLibs.findLibrary("neoforge_kotlin").ifPresent { library ->
+    sculptor.optionalLibrary("neoforge_kotlin").ifPresent { library ->
         create("kotlin-for-forge") {
             required()
 

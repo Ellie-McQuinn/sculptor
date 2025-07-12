@@ -2,10 +2,12 @@ package quest.toybox.sculptor.extension
 
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.artifacts.MinimalExternalModuleDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByName
@@ -33,47 +35,37 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
         }
     }
 
-    private val libs: VersionCatalog by lazy {
-        project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").find("libs").get()
+    val libs: VersionCatalog by lazy {
+        project.extensions.getByName<VersionCatalogsExtension>("versionCatalogs").named("libs")
     }
 
-    fun libs(): VersionCatalog = libs
-
-    val minecraftVersion: MCVersions by lazy {
-        libs.findVersion("minecraft").map { MCVersions.fromVersion(it.requiredVersion) }.get()
-    }
+    val minecraftVersion: MCVersions by lazy { MCVersions.fromVersion(version("minecraft"))!! }
 
     val javaVersion: Int by lazy {
-        libs.findVersion("java").map { it.requiredVersion.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
+        optionalVersion("java").map { it.toInt() }.getOrNull() ?: minecraftVersion.getJavaVersion()
     }
 
     val kotlinVersion: Optional<KotlinVersion> by lazy {
-        libs.findVersion("kotlin").map { KotlinVersion.fromVersion(it.requiredVersion) }
+        optionalVersion("kotlin").map { KotlinVersion.fromVersion(it) }
     }
 
     val parchmentArtifact: String by lazy {
-        parchmentArtifact(project.property("parchment_version").toString())
+        parchmentArtifact(property("parchment_version"))
     }
 
-    val neoforgeVersion: String by lazy {
-        libs.findVersion("neoforge").get().requiredVersion
-    }
+    val neoforgeVersion: String by lazy { version("neoforge") }
 
     val fabricLoaderVersion: String by lazy {
-        libs.findVersion("fabric_loader").map { it.requiredVersion }.getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
+        optionalVersion("fabric_loader").getOrNull() ?: minecraftVersion.minimumFabricLoaderVersion
     }
 
     val hasDatagens: Boolean by lazy {
-        project.findProperty("sculptor.datagens") == "true"
+        property<String>("sculptor.datagens") == "true"
     }
 
-    val modId: String by lazy {
-        project.findProperty("mod_id") as? String ?: "unknown_project"
-    }
+    val modId: String by lazy { property("mod_id") }
 
-    val modName: String by lazy {
-        project.findProperty("mod_name") as? String ?: "Unknown Project"
-    }
+    val modName: String by lazy { property("mod_name") }
 
     private var areModsFinalized: Boolean = false
     private val mods: NamedDomainObjectContainer<ModDependency> = objects.domainObjectContainer(ModDependency::class.java)
@@ -159,4 +151,14 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
             }
         }.toSet()
     }
+
+    fun <T> property(name: String): T = project.property(name)!! as T
+
+    fun optionalLibrary(name: String): Optional<Provider<MinimalExternalModuleDependency>> = libs.findLibrary(name)
+
+    fun library(name: String): Provider<MinimalExternalModuleDependency> = libs.findLibrary(name).get()
+
+    fun version(name: String): String = libs.findVersion(name).get().requiredVersion
+
+    fun optionalVersion(name: String): Optional<String> = libs.findVersion(name).map { it.requiredVersion }
 }
