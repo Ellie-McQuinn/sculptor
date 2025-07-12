@@ -126,15 +126,17 @@ fun Project.sculptorChild(configuration: String, parent: Project) {
         }
     }
 
+    val sculptor = project.the<SculptorExtension>()
+
     if (project.plugins.hasPlugin("net.neoforged.moddev") && parent.plugins.hasPlugin("net.neoforged.moddev")) {
         the<NeoForgeExtension>().accessTransformers.from(
             parent.the<NeoForgeExtension>().accessTransformers.files
         )
     }
 
-    if (project.plugins.hasPlugin("fabric-loom") && parent.plugins.hasPlugin("fabric-loom")) {
-        val parentProp = parent.the<LoomGradleExtensionAPI>().accessWidenerPath
-
-        the<LoomGradleExtensionAPI>().accessWidenerPath.convention(parentProp)
+    if (project.plugins.hasPlugin("fabric-loom")) {
+        parent.file("src/main/resources/${sculptor.modId}.accesswidener").takeIf { it.exists() }?.also {
+            the<LoomGradleExtensionAPI>().accessWidenerPath.convention { it }
+        }
     }
 }

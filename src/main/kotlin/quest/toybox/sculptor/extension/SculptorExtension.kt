@@ -60,7 +60,7 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
     }
 
     val hasDatagens: Boolean by lazy {
-        property<String>("sculptor.datagens") == "true"
+        optionalProperty<String>("sculptor.datagens") == "true"
     }
 
     val modId: String by lazy { property("mod_id") }
@@ -153,6 +153,8 @@ abstract class SculptorExtension @Inject constructor(val project: Project, objec
     }
 
     fun <T> property(name: String): T = project.property(name)!! as T
+
+    fun <T> optionalProperty(name: String): T? = project.findProperty(name) as T?
 
     fun optionalLibrary(name: String): Optional<Provider<MinimalExternalModuleDependency>> = libs.findLibrary(name)
 
