@@ -726,9 +726,23 @@ enum class MCVersions(
     ),
     MC_1_21_7(
         version = "1.21.7",
-        normalizedVersion = "1.27.1",
+        normalizedVersion = "1.21.7",
         minimumFabricLoaderVersion = "0.16.13",
         neoFormVersion = "1.21.7-20250630.141722"
+    ),
+    // endregion
+    // region MC_1_21_8
+    MC_1_21_8_RC_1(
+        version = "1.21.8-rc1",
+        normalizedVersion = "1.21.8-rc.1",
+        minimumFabricLoaderVersion = "0.16.13",
+        neoFormVersion = "1.21.8-rc1-20250715.150430"
+    ),
+    MC_1_21_8(
+        version = "1.21.8",
+        normalizedVersion = "1.21.8",
+        minimumFabricLoaderVersion = "0.16.13",
+        neoFormVersion = "1.21.8-20250717.133445"
     );
     // endregion
 
@@ -762,20 +776,22 @@ enum class MCVersions(
         } else if (this < MC_1_21) {
             "1.21-Snapshot"
         } else if (this < MC_1_21_1) {
-            "1.21_1-Snapshot"
+            "1.21.1-Snapshot"
         } else if (this < MC_1_21_2) {
-            "1.21_2-Snapshot"
+            "1.21.2-Snapshot"
         } else if (this < MC_1_21_3) {
-            "1.21_3"
+            "1.21.3"
         } else if (this < MC_1_21_4) {
-            "1.21_4-Snapshot"
+            "1.21.4-Snapshot"
         } else if (this < MC_1_21_5) {
-            "1.21_5-Snapshot"
+            "1.21.5-Snapshot"
         } else if (this < MC_1_21_6) {
-            "1.21_6-Snapshot"
+            "1.21.6-snapshot"
         } else if (this < MC_1_21_7) {
-            "1.21_7"
-        } else {
+            "1.21.7"
+        } else if (this < MC_1_21_8) {
+            "1.21.8"
+        }else {
             throw IllegalStateException("Unknown version.")
         }
     }
