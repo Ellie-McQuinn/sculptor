@@ -7,6 +7,7 @@ import quest.toybox.sculptor.extension.SculptorExtension
 plugins {
     id("quest.toybox.sculptor-shared")
     id("net.neoforged.moddev")
+    id("org.jetbrains.gradle.plugin.idea-ext")
 }
 
 val sculptor = extensions.getByName<SculptorExtension>("sculptor")

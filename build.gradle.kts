@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "quest.toybox.sculptor"
-version = "0.0.26"
+version = "0.0.27"
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(21)
@@ -44,9 +44,15 @@ repositories {
 
 dependencies {
     // https://projects.neoforged.net/neoforged/moddevgradle/
-    implementation(group = "net.neoforged", name = "moddev-gradle", version = "2.0.95")
+    implementation(group = "net.neoforged", name = "moddev-gradle", version = "2.0.99")
     // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
     implementation(group = "net.fabricmc", name = "fabric-loom", version = "1.11.1")
+
+    implementation(
+        group = "org.jetbrains.gradle.plugin.idea-ext",
+        name = "org.jetbrains.gradle.plugin.idea-ext.gradle.plugin",
+        version = "1.2"
+    )
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation(group = "com.google.code.gson", name = "gson", version = "2.13.1")
