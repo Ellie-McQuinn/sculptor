@@ -800,7 +800,7 @@ enum class MCVersions(
 
     companion object {
         fun fromVersion(version: String): MCVersions? {
-            return MCVersions.values().firstOrNull { it.version == version }
+            return entries.firstOrNull { it.version == version }
         }
     }
 }
