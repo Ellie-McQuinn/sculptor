@@ -34,6 +34,7 @@ loom {
             configName = "${displayName(project.name)} ${name.uppercaseFirstChar()}"
             isIdeConfigGenerated = false
         }
+
         named("client") { client() }
 
         named("server") { server() }

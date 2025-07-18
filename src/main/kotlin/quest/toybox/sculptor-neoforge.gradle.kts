@@ -22,7 +22,6 @@ sculptor.mods {
             }
         }
     }
-
 }
 
 neoForge {

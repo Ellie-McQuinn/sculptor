@@ -7,6 +7,7 @@ import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtraPropertiesExtension
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.dependencies
@@ -21,7 +22,6 @@ import org.gradle.kotlin.dsl.the
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import quest.toybox.sculptor.extension.SculptorExtension
-
 
 fun <T: Any> ExtraPropertiesExtension.gets(key: String): T = get(key)!! as T
 fun <T: Any> ExtraPropertiesExtension.find(key: String): T? = if (has(key)) { gets(key) } else { null }
@@ -140,3 +140,5 @@ fun Project.sculptorChild(configuration: String, parent: Project) {
         }
     }
 }
+
+fun boolean(provider: Provider<String>): Provider<Boolean> = provider.map { it.equals("true", true) }
