@@ -63,8 +63,8 @@ dependencies {
 // Find checksums here: https://gradle.org/release-checksums/
 // Run gradlew :wrapper a couple of times to update.
 tasks.wrapper {
-    gradleVersion = "9.0.0-rc-1"
-    distributionSha256Sum = "5086034b0656a79fee07a04cfadc103984b075ac85d3a20748649671283be1bb"
+    gradleVersion = "9.0.0"
+    distributionSha256Sum = "8fad3d78296ca518113f3d29016617c7f9367dc005f932bd9d93bf45ba46072b"
     distributionType = Wrapper.DistributionType.BIN
 }
 
