@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "quest.toybox.sculptor"
-version = "0.0.28"
+version = "0.0.29"
 
 java.toolchain {
     languageVersion = JavaLanguageVersion.of(21)
@@ -43,10 +43,17 @@ repositories {
 }
 
 dependencies {
-    // https://projects.neoforged.net/neoforged/moddevgradle/
-    implementation(group = "net.neoforged", name = "moddev-gradle", version = "2.0.99")
-    // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
-    implementation(group = "net.fabricmc", name = "fabric-loom", version = "1.11.1")
+    implementation(
+        group = "net.neoforged",
+        name = "moddev-gradle",
+        version = "2.0.107" // https://projects.neoforged.net/neoforged/moddevgradle/
+    )
+
+    implementation(
+        group = "net.fabricmc",
+        name = "fabric-loom",
+        version = "1.11.7" // https://maven.fabricmc.net/net/fabricmc/fabric-loom/
+    )
 
     implementation(
         group = "org.jetbrains.gradle.plugin.idea-ext",
@@ -54,18 +61,17 @@ dependencies {
         version = "1.2"
     )
 
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation(group = "com.google.code.gson", name = "gson", version = "2.13.1")
+    implementation(
+        group = "com.google.code.gson",
+        name = "gson",
+        version = "2.13.1" // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    )
 
-    implementation(group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version = "2.1.0")
-}
-
-// Find checksums here: https://gradle.org/release-checksums/
-// Run gradlew :wrapper a couple of times to update.
-tasks.wrapper {
-    gradleVersion = "9.0.0"
-    distributionSha256Sum = "8fad3d78296ca518113f3d29016617c7f9367dc005f932bd9d93bf45ba46072b"
-    distributionType = Wrapper.DistributionType.BIN
+    implementation(
+        group = "org.jetbrains.kotlin",
+        name = "kotlin-gradle-plugin",
+        version = "2.1.0"
+    )
 }
 
 idea {
