@@ -1,9 +1,15 @@
 package quest.toybox
 
+import com.google.gson.JsonObject
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
+import quest.toybox.sculptor.extension.ContributorRank
 import quest.toybox.sculptor.extension.SculptorExtension
 import quest.toybox.sculptor.find
 import quest.toybox.sculptor.getModVersion
+import quest.toybox.sculptor.task.JsonProcessingReader
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.jvm.java
 
 plugins {
     `java-library`
@@ -105,7 +111,28 @@ dependencies {
 }
 
 // region // Add Information to Jar...
-val extraReplacements = ext.find<Map<String, String>>("extra_replacements")
+
+tasks.processResources {
+    filesMatching(listOf("**/*.json", "**/*.mcmeta")) {
+        val processor: (JsonObject.() -> Unit)? = when (name) {
+            "fabric.mod.json" -> { ->
+                val authors = getAsJsonArray("authors")
+                val contributors = getAsJsonArray("contributors")
+
+                ext.find<Map<String, ContributorRank>>("contributors")?.forEach { (contributor, role) ->
+                    if (role.isAuthor()) {
+                        authors.add(contributor)
+                    } else {
+                        contributors.add(contributor)
+                    }
+                }
+            }
+            else -> null
+        }
+
+        filter(mapOf("processor" to processor), JsonProcessingReader::class.java)
+    }
+}
 
 tasks {
     jar.configure {
@@ -117,7 +144,8 @@ tasks {
         archiveVersion = getModVersion(project.version.toString())
 
         manifest.attributes(
-            "Built-On-Minecraft" to sculptor.minecraftVersion.version
+            "Built-On-Minecraft" to sculptor.minecraftVersion.version,
+            "SPDX-License-Identifier" to project.property("license") as String
         )
     }
 
@@ -145,7 +173,7 @@ tasks {
             replacements["neoforge_kotlin_version"] = it.get().versionConstraint.requiredVersion
         }
 
-        extraReplacements?.also { replacements.putAll(it) }
+        ext.find<Map<String, String>>("extra_replacements")?.also { replacements.putAll(it) }
 
         inputs.properties(replacements)
 
